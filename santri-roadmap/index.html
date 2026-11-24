@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santri Roadmap to Scholar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-hover: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: #334155;
+    --accent: #3b82f6;
+    --accent-soft: rgba(59, 130, 246, 0.15);
+    --success: #22c55e;
+    --radius: 12px;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  }
+
+  [data-theme="light"] {
+    --bg: #f8fafc;
+    --panel: #ffffff;
+    --panel-hover: #f1f5f9;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #cbd5e1;
+    --accent-soft: rgba(59, 130, 246, 0.1);
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+
+  .brand-text h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+  .brand-text p { font-size: 0.8rem; color: var(--muted); }
+
+  .header-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 150px;
+  }
+
+  .progress-label { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #8b5cf6);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+    position: relative;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+  .progress-text { font-size: 0.85rem; font-weight: 700; min-width: 45px; text-align: right; }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+    background: var(--panel);
+  }
+  .btn:hover { background: var(--panel-hover); border-color: var(--muted); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-icon { padding: 0.5rem; border-radius: 8px; width: 36px; height: 36px; justify-content: center; }
+  .btn-icon:hover { background: var(--panel-hover); }
+  .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+  /* ---------- Layout ---------- */
+  .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+  .roadmap-shell { flex: 1; overflow: hidden; position: relative; }
+
+  .toolbar {
+    padding: 0.75rem 2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    z-index: 20;
+  }
+
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+  .search-wrap input {
+    width: 100%; padding: 0.55rem 1rem 0.55rem 2.5rem; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    font-size: 0.875rem;
+  }
+  .search-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; }
+
+  .filters { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .filter-chip {
+    padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--bg); color: var(--muted); font-size: 0.8rem; font-weight: 500;
+  }
+  .filter-chip.active { background: var(--accent-soft); color: var(--accent); border-color: rgba(59,130,246,0.4); }
+
+  /* ---------- Roadmap SVG ---------- */
+  .roadmap-view {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 140px);
+    min-height: 600px;
+  }
+
+  svg.roadmap {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  .connector { fill: none; stroke: var(--border); stroke-width: 2; stroke-linecap: round; }
+  .connector.active { stroke: var(--success); stroke-width: 2.5; }
+  .connector.locked { stroke: var(--muted); stroke-dasharray: 6 4; }
+
+  .node-group { cursor: pointer; }
+  .node-group.locked { cursor: not-allowed; opacity: 0.6; }
+
+  .node {
+    r: 20;
+    fill: var(--panel);
+    stroke: var(--border);
+    stroke-width: 2;
+    transition: all 0.25s;
+  }
+  .node.active { fill: var(--accent); stroke: var(--accent); filter: drop-shadow(0 0 8px var(--accent-soft)); }
+  .node.done { fill: var(--success); stroke: var(--success); }
+  .node.locked { fill: #0f172a; stroke: var(--border); stroke-dasharray: 4 3; }
+
+  .node-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    fill: var(--text);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  }
+  .node-group.locked .node-label { fill: var(--muted); }
+
+  .badge {
+    cx: 14;
+    cy: -14;
+    r: 7;
+    fill: var(--success);
+    stroke: var(--bg);
+    stroke-width: 2;
+    pointer-events: none;
+  }
+
+  .column-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    fill: var(--muted);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  /* ---------- Detail Panel ---------- */
+  .detail-panel {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 420px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .detail-panel.open { transform: translateX(0); }
+
+  .detail-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .detail-close {
+    padding: 0.4rem; border-radius: 6px; color: var(--muted);
+  }
+  .detail-close:hover { background: var(--panel-hover); color: var(--text); }
+
+  .detail-body { padding: 1.25rem; overflow-y: auto; flex: 1; }
+  .detail-empty {
+    height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: var(--muted); gap: 0.5rem;
+  }
+  .detail-empty svg { width: 48px; height: 48px; opacity: 0.4; }
+
+  .detail-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 0.25rem; letter-spacing: -0.5px; }
+  .detail-category {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.15rem 0.6rem;
+    border-radius: 6px; background: var(--accent-soft); color: var(--accent);
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(59,130,246,0.35);
+  }
+  .detail-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.6; }
+
+  .detail-section { margin-bottom: 1.25rem; }
+  .detail-section-title {
+    font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .resource-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .resource-item {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.9rem;
+    border: 1px solid var(--border); border-radius: 8px; background: var(--bg);
+  }
+  .resource-item:hover { border-color: var(--muted); background: var(--panel-hover); }
+  .resource-type {
+    width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center;
+    font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+  }
+  .type-book { background: var(--accent-soft); color: var(--accent); }
+  .type-video { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+  .type-article { background: rgba(249, 115, 22, 0.15); color: #f97316; }
+  .type-tool { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
+  .resource-info h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.15rem; }
+  .resource-info p { font-size: 0.78rem; color: var(--muted); margin: 0; }
+  .resource-link { margin-left: auto; color: var(--accent); font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+  .resource-link:hover { text-decoration: underline; }
+
+  .node-meta { display: flex; gap: 0.6rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .meta-pill {
+    font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid var(--border);
+    color: var(--muted); background: var(--bg);
+  }
+  .meta-pill.done { color: var(--success); border-color: var(--success); }
+
+  .action-row { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+  .action-row .btn { flex: 1; justify-content: center; }
+
+  /* ---------- Overlay ---------- */
+  .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 45; display: none; align-items: center; justify-content: center; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    header { padding: 1rem; }
+    .toolbar { padding: 0.5rem 1rem; }
+    .progress-wrap { min-width: 120px; }
+    .detail-panel { width: 100%; max-width: 100%; transform: translateY(100%); }
+    .detail-panel.open { transform: translateY(0); }
+    .brand-text { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .header-actions { order: 3; width: 100%; justify-content: space-between; margin-top: 0.75rem; }
+    .brand { order: 1; }
+    .toolbar { gap: 0.5rem; }
+    .filters { order: 2; width: 100%; overflow-x: auto; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .filters::-webkit-scrollbar { display: none; }
+    .search-wrap { order: 4; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-icon">SR</div>
+    <div class="brand-text">
+      <h1>Santri Roadmap to Scholar</h1>
+      <p>From foundation to ulama &mdash; inspired by roadmap.sh</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="progress-wrap">
+      <span class="progress-label">Progress</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="progress-text" id="progressText">0%</span>
+    </div>
+    <button class="btn btn-icon" id="themeToggle" aria-label="Toggle theme" title="Dark/Light mode">&#9728;</button>
+    <button class="btn btn-sm btn-primary" id="resetProgress" title="Reset progress">Reset Progress</button>
+  </div>
+</header>
+
+<div class="app">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="searchInput" placeholder="Search topics...">
+    </div>
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="roadmap-shell">
+    <div class="roadmap-view">
+      <svg class="roadmap" id="roadmapSvg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="var(--muted)" />
+          </marker>
+        </defs>
+        <g id="connectors"></g>
+        <g id="nodes"></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div>
+        <div class="detail-category" id="detailCategory"></div>
+        <h2 class="detail-title" id="detailTitle"></h2>
+      </div>
+      <button class="btn-icon detail-close" id="detailClose" aria-label="Close details">&#10006;</button>
+    </div>
+    <div class="detail-body" id="detailBody">
+      <div class="detail-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4"/><circle cx="5" cy="5" r="2"/><circle cx="18" cy="18" r="2"/><line x1="22" y1="6" x2="8" y2="6"/><line x1="16" y1="14" x2="2" y2="14"/></svg>
+        <p>Select a topic to see details &amp; resources</p>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="markBtn">Mark Complete</button>
+      <button class="btn" id="openResourceBtn">Open Resource</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<script>
+const STORAGE_KEY = 'santri_roadmap_progress_v1';
+
+const COLUMNS = [
+  { id: 'foundation', title: 'Fondasi', color: '#3b82f6' },
+  { id: 'arabic', title: 'Bahasa Arab', color: '#8b5cf6' },
+  { id: 'quran', title: 'Ilmu Al-Quran', color: '#06b6d4' },
+  { id: 'hadith', title: 'Ilmu Hadis', color: '#f59e0b' },
+  { id: 'fiqh', title: 'Fiqih &amp; Usul', color: '#10b981' },
+  { id: 'aqidah', title: 'Aqidah &amp; Kalam', color: '#ef4444' },
+  { id: 'specialist', title: 'Khusus &amp; Ijazah', color: '#a855f7' },
+  { id: 'scholar', title: 'Ulama', color: '#f43f5e' },
+];
+
+const NODES = [
+  // --- Foundation ---
+  { id: 'niat', column: 'foundation', title: 'Niat &amp; Adab Santri', desc: 'Menetapkan niat lillahi ta\u2019ala dan memahami adab sebagai fundament penuntut ilmu.', prereq: [], resources: [
+    { type: 'book', title: 'Adab al-Muta\u2019allim', author: 'Al-Khatib al-Baghdadi', url: '#', note: 'Klasik soal etika menuntut ilmu' },
+    { type: 'article', title: 'Niat &amp; Ikhlas', author: 'Ceramah Ustadz', url: '#', note: 'Dasar setiap perbuatan' },
+  ] },
+  { id: 'wudhu', column: 'foundation', title: 'Wudhu &amp; Shalat', desc: 'Taharah dan tata cara shalat yang benar sebagai pondasi ibadah harian.', prereq: [], resources: [
+    { type: 'book', title: 'Matn Abu Shuja\u2019i', author: 'Fiqh Syafi\u2019i', url: '#', note: 'Ibadah: wudhu &amp; shalat' },
+    { type: 'video', title: 'Tutorial Wudhu &amp; Shalat', author: 'Pesantren Digital', url: '#', note: 'Praktik langsung' },
+  ] },
+  { id: 'murottal', column: 'foundation', title: 'Tahfizh Surat Pendek', desc: 'Hafal Juz \u2018Amma dan surat pendek untuk shalat harian.', prereq: [], resources: [
+    { type: 'video', title: 'Tahfizh Juz \u2018Amma', author: 'Ustadz Fathul', url: '#', note: 'Surat pendek' },
+    { type: 'tool', title: 'Aplikasi Tahfizh', author: 'Muslim Pro / Ayat', url: '#', note: 'Bantuan hafalan' },
+  ] },
+
+  // --- Arabic ---
+  { id: 'nahwu', column: 'arabic', title: 'Nahwu (Sintaks)', desc: 'Ilmu pembinaan kalimat agar dapat membaca kitab kuning dengan benar.', prereq: ['niat'], resources: [
+    { type: 'book', title: 'Ajurrumiyyah', author: 'Ibnu Ajurrum', url: '#', note: 'Pengenalan nahwu' },
+    { type: 'book', title: 'Qothrun Nada', author: 'Husein al-Jisr', url: '#', note: 'Nahwu lanjutan' },
+  ] },
+  { id: 'sharaf', column: 'arabic', title: 'Sharaf (Morfologi)', desc: 'Ilmu perubahan kata agar memahami wazan dan akar kata Arab.', prereq: ['nahwu'], resources: [
+    { type: 'book', title: 'Sarf Shighi', author: 'Imam Nawawi', url: '#', note: 'Pengenalan sharaf' },
+    { type: 'video', title: 'Sarf Shighi Class', author: 'Ustadzah', url: '#', note: 'Penjelasan wazan' },
+  ] },
+  { id: 'mufradat', column: 'arabic', title: 'Mufradat (Kosa Kata)', desc: 'Kosakata Arab yang sering muncul dalam kitab kuning dan al-Quran.', prereq: ['sharaf'], resources: [
+    { type: 'book', title: 'Al-Mufradat fi Gharib al-Quran', author: 'Ar-Raghib al-Isfahani', url: '#', note: 'Kosa kata Quran' },
+    { type: 'article', title: 'Daftar Mufradat Dasar', author: 'Pesantren', url: '#', note: 'Kosa kata harian' },
+  ] },
+
+  // --- Quran ---
+  { id: 'tajwid', column: 'quran', title: 'Tajwid', desc: 'Ilmu membaca al-Quran dengan hafal dan karakter yang benar.', prereq: ['murottal'], resources: [
+    { type: 'book', title: 'Tuhafah al-Atfal', author: 'Al-Jamzuri', url: '#', note: 'Dasar tajwid' },
+    { type: 'video', title: 'Tajwid Class', author: 'Qari', url: '#', note: 'Praktek membaca' },
+  ] },
+  { id: 'qiraah', column: 'quran', title: 'Qiraah (Membaca Quran)', desc: 'Melancarkan bacaan al-Quran dengan tajwid yang baik.', prereq: ['tajwid'], resources: [
+    { type: 'video', title: 'Qiraah 30 Juz', author: 'Qari Indonesia', url: '#', note: 'Bacaan lengkap' },
+  ] },
+  { id: 'ulumQuran', column: 'quran', title: 'Ulumul Quran', desc: 'Ilmu tentang al-Quran: wahyu, nasab, nasikh mansukh, dan sebab nuzul.', prereq: ['qiraah'], resources: [
+    { type: 'book', title: 'Manahil al-Irfan', author: 'Az-Zarkashiy', url: '#', note: 'Ulumul Quran klasik' },
+    { type: 'article', title: 'Sejarah Kumpulan Quran', author: 'Pustaka Islam', url: '#', note: 'Kumpulan mushaf' },
+  ] },
+
+  // --- Hadith ---
+  { id: 'mustalah', column: 'hadith', title: 'Mustalahul Hadis', desc: 'Ilmu kriteria pengkajian hadis: sanad dan matan.', prereq: ['nahwu', 'sharaf'], resources: [
+    { type: 'book', title: 'Al-Madkhal ila Ulum al-Hadis', author: 'Imam Nawawi', url: '#', note: 'Pengantar mustalah' },
+    { type: 'article', title: 'Hadis Shahih, Hasan, Da\u2019if', author: 'Pustaka Hadis', url: '#', note: 'Klasifikasi hadis' },
+  ] },
+  { id: 'shahihain', column: 'hadith', title: 'Studi Shahihain', desc: 'Mempelajari Shahih al-Bukhari dan Shahih Muslim.', prereq: ['mustalah'], resources: [
+    { type: 'book', title: 'Shahih al-Bukhari', author: 'Imam Bukhari', url: '#', note: 'Kitab terauthentik' },
+    { type: 'book', title: 'Shahih Muslim', author: 'Imam Muslim', url: '#', note: 'Kitab terauthentik' },
+  ] },
+
+  // --- Fiqh ---
+  { id: 'fiqhIbadah', column: 'fiqh', title: 'Fiqih Ibadah', desc: 'Hukum shalat, puasa, zakat, haji, dan umrah dalam madzhab yang dipilih.', prereq: ['wudhu'], resources: [
+    { type: 'book', title: 'Matn Abu Shuja\u2019i', author: 'Fiqh Syafi\u2019i', url: '#', note: 'Ibadah lengkap' },
+    { type: 'video', title: 'Fiqih Ibadah Class', author: 'Ustadz', url: '#', note: 'Praktek ibadah' },
+  ] },
+  { id: 'usulFiqh', column: 'fiqh', title: 'Usul al-Fiqh', desc: 'Metode menetapkan hukum dari dalil al-Quran dan as-Sunnah.', prereq: ['fiqhIbadah'], resources: [
+    { type: 'book', title: 'Al-Waraqat', author: 'Al-Juwayni', url: '#', note: 'Dasar usul fiqh' },
+    { type: 'article', title: 'Dalil &amp; Qiyas', author: 'Pustaka Fiqh', url: '#', note: 'Metode ijtihad' },
+  ] },
+  { id: 'qawaid', column: 'fiqh', title: 'Qawa\u2019id Fiqhiyah', desc: 'Qawaidah umum hukum fiqh untuk menyelesaikan permasalahan baru.', prereq: ['usulFiqh'], resources: [
+    { type: 'book', title: 'Al-Qawa\u2019id al-Fiqhiyyah', author: 'As-Suyuti', url: '#', note: 'Qawaid fiqh klasik' },
+  ] },
+
+  // --- Aqidah ---
+  { id: 'aqidahDasar', column: 'aqidah', title: 'Aqidah Ahlussunnah', desc: 'Aqidah sesuai jalan Ahlussunnah wal Jama\u2019ah dalam tauhid dan sifat Allah.', prereq: [], resources: [
+    { type: 'book', title: 'Al-Aqidah al-Wasitiyyah', author: 'Ibni Taymiyyah', url: '#', note: 'Aqidah salaf' },
+    { type: 'article', title: 'Tauhid &amp; Asmaul Husna', author: 'Pustaka Aqidah', url: '#', note: 'Sifat Allah' },
+  ] },
+  { id: 'kalam', column: 'aqidah', title: 'Ilmu Kalam Dasar', desc: 'Pembahasan aql dan naql dalam membuktikan tauhid dan membantah bid\u2019ah.', prereq: ['aqidahDasar'], resources: [
+    { type: 'book', title: 'Al-Ibanah an Sunnah an-Nabawiyyah', author: 'Ibni Battah', url: '#', note: 'Klasik kalam' },
+  ] },
+
+  // --- Specialist ---
+  { id: 'takhassus', column: 'specialist', title: 'Takhassus (Spesialisasi)', desc: 'Memilih salah satu ilmu untuk dikaji secara mendalam (tafsir, hadis, fiqh, dll).', prereq: ['ulumQuran', 'shahihain', 'usulFiqh'], resources: [
+    { type: 'book', title: 'Panduan Takhassus', author: 'Guru Pondok', url: '#', note: 'Pilih satu cabang ilmu' },
+  ] },
+  { id: 'sanad', column: 'specialist', title: 'Sanad &amp; Ijazah', desc: 'Mendapatkan ijazah dari ustadz yang mempunyai sanad hingga Nabi shallallahu \u2018alayhi wa sallam.', prereq: ['takhassus'], resources: [
+    { type: 'tool', title: 'Kontak Kyai/Ustadz', author: 'Pondok Pesantren', url: '#', note: 'Tertiadiri langsung' },
+  ] },
+  { id: 'tadris', column: 'specialist', title: 'Tadris (Mengajarkan)', desc: 'Mengajarkan ilmu yang telah dikuasai kepada santri lainnya.', prereq: ['sanad'], resources: [
+    { type: 'video', title: 'Metode Pengajaran Santri', author: 'Pondok', url: '#', note: 'Praktek ngaji' },
+  ] },
+
+  // --- Scholar ---
+  { id: 'talif', column: 'scholar', title: 'Ta\u2019lif (Menulis Karya)', desc: 'Menulis kitab, makalah, atau artikel ilmu yang bermanfaat.', prereq: ['tadris'], resources: [
+    { type: 'book', title: 'Metode Penulisan Ilmiah Islami', author: 'Pustaka', url: '#', note: 'Penulisan karya' },
+  ] },
+  { id: 'risalah', column: 'scholar', title: 'Risalah &amp; Penelitian', desc: 'Melakukan penelitian dan menulis risalah ilmiah.', prereq: ['talif'], resources: [
+    { type: 'article', title: 'Metode Penelitian Islami', author: 'Litbang', url: '#', note: 'Risalah ilmiah' },
+  ] },
+  { id: 'fatwa', column: 'scholar', title: 'Fatwa &amp; Keimamatan', desc: 'Memberikan fatwa dan memimpin umat dalam kebaikan sebagai ulama.', prereq: ['risalah'], resources: [
+    { type: 'book', title: 'Adab al-Mufti wal Mustafti', author: 'Al-Khatib al-Baghdadi', url: '#', note: 'Etika mufti' },
+  ] },
+];
+
+/* ================= App State ================= */
+const state = {
+  completed: new Set(),
+  selectedId: null,
+  search: '',
+  activeFilter: null,
+};
+
+const svg = document.getElementById('roadmapSvg');
+const connectorsG = document.getElementById('connectors');
+const nodesG = document.getElementById('nodes');
+const detailPanel = document.getElementById('detailPanel');
+const detailBody = document.getElementById('detailBody');
+const detailTitle = document.getElementById('detailTitle');
+const detailCategory = document.getElementById('detailCategory');
+const markBtn = document.getElementById('markBtn');
+const openResourceBtn = document.getElementById('openResourceBtn');
+const detailClose = document.getElementById('detailClose');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const searchInput = document.getElementById('searchInput');
+const filtersEl = document.getElementById('filters');
+const themeToggle = document.getElementById('themeToggle');
+const resetBtn = document.getElementById('resetProgress');
+const overlay = document.getElementById('overlay');
+
+let nodeElements = {};
+let columnX = {};
+let layout = {};
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) state.completed = new Set(arr);
+    }
+  } catch (e) {}
+}
+
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.completed]));
+}
+
+function isLocked(node) {
+  return node.prereq.some(p => !state.completed.has(p));
+}
+
+function renderProgress() {
+  const total = NODES.length;
+  const done = state.completed.size;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  progressFill.style.width = pct + '%';
+  progressText.textContent = pct + '%';
+}
+
+function computeLayout() {
+  const padding = 90;
+  const rowHeight = 110;
+  const topMargin = 60;
+  const width = svg.clientWidth || window.innerWidth;
+  const height = svg.clientHeight || window.innerHeight;
+
+  COLUMNS.forEach((c, i) => {
+    columnX[c.id] = padding + (i / (COLUMNS.length - 1)) * (width - 2 * padding);
+  });
+
+  const perColumn = {};
+  NODES.forEach(n => {
+    perColumn[n.column] = perColumn[n.column] || [];
+    perColumn[n.column].push(n);
+  });
+
+  layout = {};
+  NODES.forEach(n => {
+    const siblings = perColumn[n.column];
+    const idx = siblings.indexOf(n);
+    layout[n.id] = {
+      x: columnX[n.column],
+      y: topMargin + idx * rowHeight + rowHeight / 2,
+      column: n.column,
+    };
+  });
+  return { width, height };
+}
+
+function clearRoadmap() {
+  connectorsG.innerHTML = '';
+  nodesG.innerHTML = '';
+  nodeElements = {};
+}
+
+function drawConnectors() {
+  NODES.forEach(child => {
+    child.prereq.forEach(parentId => {
+      const pa = layout[parentId];
+      const ch = layout[child.id];
+      if (!pa || !ch) return;
+      const locked = isLocked(child);
+
+      const dx = ch.x - pa.x;
+      const cp1x = pa.x + dx * 0.5;
+      const cp2x = ch.x - dx * 0.5;
+      const d = `M ${pa.x + 20} ${pa.y} C ${cp1x + 20} ${pa.y}, ${cp2x - 20} ${ch.y}, ${ch.x - 20} ${ch.y}`;
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      line.setAttribute('class', `connector ${locked ? 'locked' : ''}`);
+      line.setAttribute('d', d);
+      connectorsG.appendChild(line);
+    });
+  });
+}
+
+function drawNodes() {
+  NODES.forEach(n => {
+    const locked = isLocked(n);
+    const done = state.completed.has(n.id);
+    const active = state.selectedId === n.id;
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', `node-group ${locked ? 'locked' : ''} ${active ? 'active' : ''} ${done ? 'done' : ''}`);
+    g.setAttribute('transform', `translate(${layout[n.x]},${layout[n.y]})`);
+    g.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectNode(n.id);
+    });
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('class', `node ${locked ? 'locked' : ''} ${done ? 'done' : ''} ${active ? 'active' : ''}`);
+    circle.setAttribute('r', '20');
+    g.appendChild(circle);
+
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'node-label');
+    label.textContent = n.title;
+    g.appendChild(label);
+
+    if (done) {
+      const badge = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      badge.setAttribute('class', 'badge');
+      badge.setAttribute('cx', '14');
+      badge.setAttribute('cy', '-14');
+      badge.setAttribute('r', '7');
+      g.appendChild(badge);
+    }
+
+    nodesG.appendChild(g);
+    nodeElements[n.id] = g;
+  });
+}
+
+function drawRoadmap() {
+  computeLayout();
+  clearRoadmap();
+  drawConnectors();
+  drawNodes();
+}
+
+function selectNode(id) {
+  state.selectedId = id;
+  const node = NODES.find(n => n.id === id);
+  if (!node) return;
+
+  Object.entries(nodeElements).forEach(([nid, g]) => {
+    g.classList.toggle('active', nid === id);
+  });
+
+  const col = COLUMNS.find(c => c.id === node.column);
+  detailCategory.textContent = col ? col.title : '';
+  detailCategory.style.color = col ? col.color : 'var(--accent)';
+  detailTitle.textContent = node.title;
+
+  const locked = isLocked(node);
+  const done = state.completed.has(id);
+
+  let html = `<div class="detail-desc">${escapeHtml(node.desc)}</div>`;
+
+  const prereqTitles = node.prereq.map(p => {
+    const x = NODES.find(q => q.id === p);
+    return x ? x.title : p;
+  });
+
+  html += `<div class="node-meta">`;
+  html += `<span class="meta-pill ${done ? 'done' : ''}">${done ? 'Selesai' : locked ? 'Terkunci' : 'Tersedia'}</span>`;
+  html += `<span class="meta-pill">${prereqTitles.length ? 'Prasyarat: ' + prereqTitles.join(', ') : 'Tidak ada prasyarat'}</span>`;
+  html += `</div>`;
+
+  html += `<div class="detail-section">
+    <div class="detail-section-title">&#128218; Referensi &amp; Sumber Belajar</div>
+    <div class="resource-list">`;
+  if (node.resources.length) {
+    node.resources.forEach(r => {
+      const emoji = r.type === 'book' ? '&#128218;' : r.type === 'video' ? '&#127925;' : r.type === 'article' ? '&#128196;' : '&#128187;';
+      const typeClass = 'type-' + r.type;
+      html += `<div class="resource-item">
+        <div class="resource-type ${typeClass}">${emoji}</div>
+        <div class="resource-info">
+          <h4>${escapeHtml(r.title)}</h4>
+          <p>${escapeHtml(r.author || '')} &bull; ${escapeHtml(r.note || '')}</p>
+        </div>
+        <a class="resource-link" href="${escapeHtml(r.url)}" target="_blank" rel="noopener">Buka &#8594;</a>
+      </div>`;
+    });
+  } else {
+    html += `<div style="color:var(--muted); font-size:0.85rem;">Belum ada referensi yang terdaftar.</div>`;
+  }
+  html += `</div></div>`;
+
+  detailBody.innerHTML = html;
+
+  markBtn.textContent = done ? 'Tandai Belum Selesai' : 'Tandai Selesai';
+  markBtn.className = `btn ${done ? 'btn-primary' : 'btn'}`;
+  markBtn.onclick = () => toggleComplete(id);
+
+  openResourceBtn.style.display = node.resources.length ? 'inline-flex' : 'none';
+  openResourceBtn.onclick = () => {
+    const first = node.resources[0];
+    if (first && first.url && first.url !== '#') window.open(first.url, '_blank');
+  };
+
+  detailPanel.classList.add('open');
+  overlay.style.display = 'flex';
+}
+
+function closeDetail() {
+  state.selectedId = null;
+  Object.values(nodeElements).forEach(g => g.classList.remove('active'));
+  detailPanel.classList.remove('open');
+  overlay.style.display = 'none';
+}
+
+function toggleComplete(id) {
+  if (state.completed.has(id)) state.completed.delete(id);
+  else state.completed.add(id);
+  saveProgress();
+  renderProgress();
+  drawRoadmap();
+  if (state.selectedId === id) selectNode(id);
+}
+
+function renderFilters() {
+  filtersEl.innerHTML = '';
+  const allChip = document.createElement('button');
+  allChip.className = `filter-chip ${!state.activeFilter ? 'active' : ''}`;
+  allChip.textContent = 'Semua';
+  allChip.onclick = () => { state.activeFilter = null; renderFilters(); renderRoadmapFiltered(); };
+  filtersEl.appendChild(allChip);
+
+  COLUMNS.forEach(c => {
+    const chip = document.createElement('button');
+    chip.className = `filter-chip ${state.activeFilter === c.id ? 'active' : ''}`;
+    chip.textContent = c.title;
+    chip.onclick = () => { state.activeFilter = state.activeFilter === c.id ? null : c.id; renderFilters(); renderRoadmapFiltered(); };
+    filtersEl.appendChild(chip);
+  });
+}
+
+function renderRoadmapFiltered() {
+  NODES.forEach(n => {
+    const g = nodeElements[n.id];
+    const matchSearch = n.title.toLowerCase().includes(state.search.toLowerCase()) || n.desc.toLowerCase().includes(state.search.toLowerCase());
+    const matchFilter = !state.activeFilter || n.column === state.activeFilter;
+    g.style.display = (matchSearch && matchFilter) ? '' : 'none';
+  });
+}
+
+function escapeHtml(t) {
+  return String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
+
+/* ---------- Theme ---------- */
+function initTheme() {
+  const saved = localStorage.getItem('santri_roadmap_theme');
+  document.documentElement.setAttribute('data-theme', saved || 'dark');
+  updateThemeIcon();
+}
+function toggleTheme() {
+  const root = document.documentElement;
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('santri_roadmap_theme', next);
+  updateThemeIcon();
+}
+function updateThemeIcon() {
+  themeToggle.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '&#9728;' : '&#9729;';
+}
+
+/* ---------- Resize ---------- */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(drawRoadmap, 150);
+});
+
+/* ---------- Events ---------- */
+detailClose.addEventListener('click', closeDetail);
+overlay.addEventListener('click', closeDetail);
+searchInput.addEventListener('input', (e) => { state.search = e.target.value; renderRoadmapFiltered(); });
+resetBtn.addEventListener('click', () => {
+  if (confirm('Hapus semua progres?')) {
+    state.completed.clear();
+    saveProgress();
+    renderProgress();
+    drawRoadmap();
+    if (state.selectedId) selectNode(state.selectedId);
+  }
+});
+themeToggle.addEventListener('click', toggleTheme);
+
+/* ---------- Init ---------- */
+loadProgress();
+renderProgress();
+initTheme();
+drawRoadmap();
+renderFilters();
+renderRoadmapFiltered();
+selectNode('niat');
+</script>
+</body>
+</html>
